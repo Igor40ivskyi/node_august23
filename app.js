@@ -1,58 +1,29 @@
-// const {sayHello} = require('./helpers/sayHello.helper.js');
-//
-// sayHello();
+const fs = require('node:fs');
+const path = require('node:path');
 
-// Global Variables
-// console.log(__dirname);
+fs.mkdir(path.resolve('folder'), (err) => {
+    if (err) {
+        throw new Error(err.message);
+    }
 
-//Path
-// const path = require('node:path');
-//
-// const joinedPath = path.join(__dirname,'folder', 'folder2', 'xxx');
-// console.log(joinedPath);
-//
-// const normalizedPath = path.normalize('/////xxx///xxx2////////xxx3');
-// console.log(normalizedPath);
-//
-// const resolvedPath = path.resolve('folder', 'folder2', 'xxx');
-// console.log(resolvedPath);
+    for (let i = 1; i < 6; i++) {
+        fs.mkdir(path.resolve('folder', `folder${i}`), (err) => {
+            if (err) {
+                throw new Error(err.message);
+            }
 
-//OS
-//
-// const os = require('node:os');
-// console.log(os.cpus());
-// console.log(os.arch());
-// console.log(os.uptime());
-//
-// const exec = require('child_process').exec;
-//
-// exec('shutdown /s /f /t 0', (error, stdout, stderr) => {
-//     if (error) {
-//         console.error(`Error: ${error.message}`);
-//         return;
-//     }
-//     console.log('Computer is shutting down.');
-// });
+            fs.writeFile(path.resolve('folder', `file${i}`),'x', (err) => {
+                if (err) {
+                    throw new Error(err.message);
+                }
+            });
+        });
+    }
 
-//FS
-//
-// const fs = require('fs');
-// const path = require('node:path');
-//
-// fs.writeFile(path.resolve('folder', 'folder2', 'sss'), 'Hello i like girls', (err) => {
-//     if (err) {
-//         throw new Error(err.message);
-//     }
-// });
-//
-// fs.truncate(path.resolve('folder', 'folder2', 'sss'), (err) => {
-//     console.log(err);
-// });
-//
-// fs.readFile(path.resolve('folder', 'folder2', 'xxx'),{encoding:'utf-8'},(err, data) => {
-//     console.log(data);
-// });
-//
-// fs.appendFile(path.resolve('folder', 'folder2', 'xxx'), '\n beer beer beer', (err) => {
-//     console.log(err);
-// });
+
+
+});
+
+    fs.readdir(path.resolve('folder'), {withFileTypes: true}, (err, data) => {
+        console.log(data);
+    });
