@@ -54,31 +54,78 @@ const path = require('node:path');
 //
 // foo();
 
-const foo = async () => {
+// const foo = async () => {
+//
+//     const basePath = path.join(process.cwd(), 'baseFolder');
+//     await fs.mkdir(basePath,{recursive: true});
+//
+//     const fileNames = ['file1.txt', 'file2.txt', 'file3.txt', 'file4.txt'];
+//     const folderNames = ['folder1', 'folder2', 'folder3', 'folder4'];
+//
+//     await Promise.all(folderNames.map(async (folder) => {
+//
+//         const folderPath = path.join(basePath, folder);
+//         await fs.mkdir(folderPath, {recursive: true});
+//
+//         await Promise.all(
+//             fileNames.map(async (file) => {
+//                 await fs.writeFile(path.join(folderPath, file), 'Hello');
+//             }));
+//     }));
+//
+//     const files = await fs.readdir(path.join(basePath));
+//     for (const file of files) {
+//         const stat = await fs.stat(path.join(basePath, file));
+//         console.log(path.join(basePath, file), ' : ', stat.isDirectory() ? 'folder' : 'file');
+//     }
+//
+// };
+//
+// foo();
 
-    const basePath = path.join(process.cwd(), 'baseFolder');
+
+
+// const foo = async () => {
+//
+//     const basePath = path.join(process.cwd(), 'baseFolder');
+//     await fs.mkdir(basePath,{recursive: true});
+//
+//     const fileNames = ['file1.txt', 'file2.txt', 'file3.txt', 'file4.txt'];
+//     const folderNames = ['folder1', 'folder2', 'folder3', 'folder4'];
+//
+//     await Promise.all(folderNames.map(async (folder) => {
+//         const folderPath = path.join(basePath, folder);
+//         await fs.mkdir(folderPath, {recursive: true});
+//
+//         await Promise.all(
+//             fileNames.map(async (file) => {
+//                 await fs.writeFile(path.join(folderPath, file), 'Gello');
+//             }));
+//     }));
+//
+// };
+//
+// foo();
+
+const builder = async () => {
+
+    const folders = ['folder1', 'folder2', 'folder3', 'folder4'];
+    const files = ['file1.txt', 'file2.txt', 'file3.txt', 'file4.txt', 'file5.txt'];
+
+    const basePath = path.join(process.cwd(), 'mainDir');
+
     await fs.mkdir(basePath,{recursive: true});
 
-    const fileNames = ['file1.txt', 'file2.txt', 'file3.txt', 'file4.txt'];
-    const folderNames = ['folder1', 'folder2', 'folder3', 'folder4'];
+    await Promise.all(
+        folders.map(async (folder) => {
+            await fs.mkdir(path.join(basePath, folder), {recursive: true});
 
-    await Promise.all(folderNames.map(async (folder) => {
-
-        const folderPath = path.join(basePath, folder);
-        await fs.mkdir(folderPath, {recursive: true});
-
-        await Promise.all(
-            fileNames.map(async (file) => {
-                await fs.writeFile(path.join(folderPath, file), 'Hello');
+            await Promise.all(files.map(async (file) => {
+                fs.writeFile(path.join(basePath, folder, file), 'Geliy');
             }));
-    }));
-
-    const files = await fs.readdir(path.join(basePath));
-    for (const file of files) {
-        const stat = await fs.stat(path.join(basePath, file));
-        console.log(path.join(basePath, file), ' : ', stat.isDirectory() ? 'folder' : 'file');
-    }
+        })
+    );
 
 };
 
-foo();
+builder();
