@@ -1,36 +1,20 @@
-//Events
-// const events = require('node:events');
-//
-// const eventEmitter = new events();
-//
-// eventEmitter.on('click', () => {
-//     console.log('click click click');
-// });
-//
-// eventEmitter.once('clickOnce', () => {
-//     console.log('click only Once');
-// });
-//
-// eventEmitter.emit('click');
-//
-// eventEmitter.emit('clickOnce');
-// eventEmitter.emit('clickOnce');
-// eventEmitter.emit('clickOnce');
-// eventEmitter.emit('clickOnce');
-// eventEmitter.emit('clickOnce');
-// eventEmitter.emit('clickOnce');
-
-//Streams
-
-const express = require('express')
-const app = express()
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const express = require('express');
+const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.get('/', (req, res) => {
-    res.status(200).json({name: 'Oleh', age: 15});
-})
+const dbPath = path.join(process.cwd(), 'dataBase', 'user.json');
+
+app.get('/users', async (req, res) => {
+    const users = await fs.readFile(dbPath);
+    // const normUsers = users.toString();
+    res.status(200).json(JSON.parse(users));
+});
+
+
 
 
 const PORT = 5001;

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Damien",
+    "age": 23,
+    "gender": "male",
+    "city": "Paris"
+  },
+  {
+    "name": "Oleh",
+    "age": 33,
+    "gender": "male",
+    "city": "Paris"
+  },
+  {
+    "name": "Danylo",
+    "age": 13,
+    "gender":"male",
+    "city": "London"
+  },
+  {
+    "name": "Diana",
+    "age": 20,
+    "gender": "female",
+    "city": "Lviv"
+  },
+  {
+    "name": "Domenica",
+    "age": 24,
+    "gender": "female",
+    "city": "Kyiv"
+  }
+]
