@@ -66,9 +66,11 @@ const foo = async () => {
 
         const folderPath = path.join(basePath, folder);
         await fs.mkdir(folderPath, {recursive: true});
-        for (const file of fileNames) {
-            await fs.writeFile(path.join(folderPath, file), 'Hello');
-        }
+
+        await Promise.all(
+            fileNames.map(async (file) => {
+                await fs.writeFile(path.join(folderPath, file), 'Hello');
+            }));
     }));
 
     const files = await fs.readdir(path.join(basePath));
