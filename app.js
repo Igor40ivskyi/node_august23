@@ -52,7 +52,46 @@ app.post('/users', async (req, res) => {
 });
 
 app.patch('/users/:userId', async (req, res) => {
+    const {userId} = req.params;
+    const {name, age} = req.body;
 
+    if (name && name.length < 3) {
+        return res.status(400).json('name is not correct');
+    }
+
+    if (age && (age < 18 || age > 100)) {
+        return res.status(400).json('age is not correct');
+    }
+
+    const users = await fileService.readDB();
+    const user = users.find(user => user.id === +userId);
+
+    if (!user) {
+        return res.status(422).json('user not found');
+    }
+
+    if (name) user.name = name;
+    if(age) user.age = age;
+
+    await fileService.writeDB(users);
+
+    res.status(201).json(user);
+});
+
+app.delete('/users/:userId', async (req, res) => {
+    const {userId} = req.params;
+
+    const users = await fileService.readDB();
+    const index = users.findIndex(user => user.id === +userId);
+
+    if (index === -1) {
+        return res.status(422).json('user not found');
+    }
+
+    users.splice(index, 1);
+
+    await fileService.writeDB(users);
+    res.sendStatus(204);
 });
 
 const PORT = 5001;
