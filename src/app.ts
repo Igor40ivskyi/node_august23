@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import * as mongoose from "mongoose";
 
 const users = [
   {
@@ -80,5 +81,6 @@ app.delete("/users/:userId", (req: Request, res: Response) => {
 const PORT = 5001;
 
 app.listen(PORT, () => {
+  mongoose.connect("mongodb://127.0.0.1:27017/august_node2023");
   console.log(`Server has started on port ${PORT}`);
 });
