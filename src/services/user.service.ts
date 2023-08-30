@@ -4,15 +4,15 @@ import { IUser, IUserWithoutPassword } from "../types/user.type";
 
 class UserService {
   public async findAll(): Promise<IUserWithoutPassword[]> {
-    return User.find().select("-password");
+    return await User.find().select("-password");
   }
 
   public async findById(id: string): Promise<IUser> {
-    return User.findById(id);
+    return await User.findById(id);
   }
 
   public async create(data: IUser): Promise<IUser> {
-    return userRepository.create(data);
+    return await userRepository.create(data);
   }
 }
 
