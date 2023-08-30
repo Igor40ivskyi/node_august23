@@ -4,18 +4,20 @@ import { isObjectIdOrHexString } from "mongoose";
 import { ApiError } from "../errors/api.error";
 
 class CommonMiddleware {
-  public async isIdValid(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { userId } = req.params;
+  public isIdValid(field: string) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const id = req.params[field];
 
-      if (!isObjectIdOrHexString(userId)) {
-        throw new ApiError("user ID is not valid", 400);
+        if (!isObjectIdOrHexString(id)) {
+          throw new ApiError("user ID is not valid", 400);
+        }
+
+        next();
+      } catch (e) {
+        next(e);
       }
-
-      next();
-    } catch (e) {
-      next(e);
-    }
+    };
   }
 }
 

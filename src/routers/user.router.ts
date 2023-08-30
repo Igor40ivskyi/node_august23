@@ -10,13 +10,21 @@ router.get("/", userController.findAll);
 
 router.post("/", userMiddleware.isCreateValid, userController.create);
 
-router.get("/:userId", commonMiddleware.isIdValid, userController.findById);
+router.get(
+  "/:userId",
+  commonMiddleware.isIdValid("userId"),
+  userController.findById,
+);
 
-router.put("/:userId", commonMiddleware.isIdValid, userController.updateById);
+router.put(
+  "/:userId",
+  commonMiddleware.isIdValid("userId"),
+  userController.updateById,
+);
 
 router.delete(
   "/:userId",
-  commonMiddleware.isIdValid,
+  commonMiddleware.isIdValid("userId"),
   userController.deleteById,
 );
 
