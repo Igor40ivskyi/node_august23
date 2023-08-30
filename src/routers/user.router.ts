@@ -1,14 +1,18 @@
 import { Router } from "express";
 
 import { userController } from "../controllers/user.controller";
-import { userMiddleware } from "../middlewares";
 import { commonMiddleware } from "../middlewares/common.middleware";
+import { UserValidator } from "../validators";
 
 const router = Router();
 
 router.get("/", userController.findAll);
 
-router.post("/", userMiddleware.isCreateValid, userController.create);
+router.post(
+  "/",
+  commonMiddleware.isBodyValid(UserValidator.create),
+  userController.create,
+);
 
 router.get(
   "/:userId",
@@ -16,9 +20,18 @@ router.get(
   userController.findById,
 );
 
+//Як валідувати багато айдішок GENIOUS!
+// router.get(
+//   "/:userId/cars/:carId",
+//   commonMiddleware.isIdValid("userId"),
+//   commonMiddleware.isIdValid("carId"),
+//   userController.findById,
+// );
+
 router.put(
   "/:userId",
   commonMiddleware.isIdValid("userId"),
+  commonMiddleware.isBodyValid(UserValidator.update),
   userController.updateById,
 );
 
