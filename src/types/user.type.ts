@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export interface IUser {
   _id: Types.ObjectId;
@@ -9,4 +9,4 @@ export interface IUser {
   password: string;
 }
 
-export type IUserWithoutPassword = Omit<IUser, "password">;
+export type UserType = IUser & Document;
