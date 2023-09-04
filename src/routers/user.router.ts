@@ -1,18 +1,12 @@
 import { Router } from "express";
 
-import { userController } from "../controllers/user.controller";
+import { userController } from "../controllers";
 import { commonMiddleware } from "../middlewares/common.middleware";
 import { UserValidator } from "../validators";
 
 const router = Router();
 
 router.get("/", userController.findAll);
-
-router.post(
-  "/",
-  commonMiddleware.isBodyValid(UserValidator.create),
-  userController.create,
-);
 
 router.get(
   "/:userId",

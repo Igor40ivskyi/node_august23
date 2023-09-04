@@ -4,18 +4,18 @@ import { ApiError } from "../errors/api.error";
 import { User } from "../models/User.model";
 
 class UserMiddleware {
-  public async isExist(req: Request, res: Response, next: NextFunction) {
+  public async isUserExsist(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
-      const { userId } = req.params;
-
-      const user = await User.findById(userId);
-
+      const user = await User.findOne({ email: req.body.email });
       if (!user) {
-        throw new ApiError("user is not exist", 400);
+        throw new ApiError("User not found", 422);
       }
 
-      req.res.locals = { user };
-
+      req.res.locals.user = user;
       next();
     } catch (e) {
       next(e);

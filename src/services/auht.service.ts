@@ -21,8 +21,6 @@ class AuhtService {
     user: IUser,
   ): Promise<ITokensPair> {
     try {
-      user = await User.findOne({ email: credentials.email });
-
       const isMatched = await passwordService.compare(
         credentials.password,
         user.password,
