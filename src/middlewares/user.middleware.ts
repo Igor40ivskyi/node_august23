@@ -2,24 +2,40 @@ import { NextFunction, Request, Response } from "express";
 
 import { ApiError } from "../errors/api.error";
 import { User } from "../models/User.model";
+import { IUser } from "../types/user.type";
 
 class UserMiddleware {
-  public async isExist(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { userId } = req.params;
+  public findAndThrow(field: keyof IUser) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const user = await User.findOne({ [field]: req.body[field] });
 
-      const user = await User.findById(userId);
+        if (user) {
+          throw new ApiError("User with this email already exist", 409);
+        }
 
-      if (!user) {
-        throw new ApiError("user is not exist", 400);
+        next();
+      } catch (e) {
+        next(e);
       }
+    };
+  }
 
-      req.res.locals = { user };
+  public isUserExist<T>(field: keyof T) {
+    return async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const user = await User.findOne({ [field]: req.body[field] });
 
-      next();
-    } catch (e) {
-      next(e);
-    }
+        if (!user) {
+          throw new ApiError("User not found", 422);
+        }
+
+        req.res.locals.user = user;
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
   }
 }
 

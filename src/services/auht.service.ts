@@ -6,7 +6,7 @@ import { IUser } from "../types/user.type";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 
-class AuhtService {
+class AuthService {
   public async register(data: IUser): Promise<void> {
     try {
       const hashedPassword = await passwordService.hash(data.password);
@@ -21,8 +21,6 @@ class AuhtService {
     user: IUser,
   ): Promise<ITokensPair> {
     try {
-      user = await User.findOne({ email: credentials.email });
-
       const isMatched = await passwordService.compare(
         credentials.password,
         user.password,
@@ -32,7 +30,10 @@ class AuhtService {
         throw new ApiError("Invalid email or password", 401);
       }
 
-      const tokensPair = await tokenService.generateTokenPair({ id: user._id });
+      const tokensPair = await tokenService.generateTokenPair({
+        name: user.name,
+        _id: user._id,
+      });
 
       await Token.create({ ...tokensPair, _userId: user._id });
 
@@ -43,4 +44,4 @@ class AuhtService {
   }
 }
 
-export const authService = new AuhtService();
+export const authService = new AuthService();

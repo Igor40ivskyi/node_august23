@@ -1,10 +1,10 @@
 import { ApiError } from "../errors/api.error";
 import { User } from "../models/User.model";
 import { userRepository } from "../repositories/user.repository";
-import { IUser, IUserWithoutPassword } from "../types/user.type";
+import { IUser } from "../types/user.type";
 
 class UserService {
-  public async findAll(): Promise<IUserWithoutPassword[]> {
+  public async findAll(): Promise<IUser[]> {
     return await User.find();
   }
 

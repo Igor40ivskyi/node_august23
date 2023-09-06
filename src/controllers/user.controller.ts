@@ -57,8 +57,6 @@ class UserController {
 
       const updatedUser = await userService.updateById(userId, req.body);
 
-      console.log(updatedUser, "UPDATED");
-
       return res.status(201).json(updatedUser);
     } catch (e) {
       next(e);
