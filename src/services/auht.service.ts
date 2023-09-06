@@ -21,8 +21,6 @@ class AuhtService {
     user: IUser,
   ): Promise<ITokensPair> {
     try {
-      user = await User.findOne({ email: credentials.email });
-
       const isMatched = await passwordService.compare(
         credentials.password,
         user.password,
@@ -32,7 +30,10 @@ class AuhtService {
         throw new ApiError("Invalid email or password", 401);
       }
 
-      const tokensPair = await tokenService.generateTokenPair({ id: user._id });
+      const tokensPair = await tokenService.generateTokenPair({
+        _id: user._id,
+        name: user.name,
+      });
 
       await Token.create({ ...tokensPair, _userId: user._id });
 
