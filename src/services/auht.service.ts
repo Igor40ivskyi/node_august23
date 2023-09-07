@@ -1,3 +1,4 @@
+import { EEmailActions } from "../enums/email.enum";
 import { ApiError } from "../errors/api.error";
 import { Token } from "../models/token.model";
 import { User } from "../models/User.model";
@@ -14,7 +15,9 @@ class AuhtService {
 
       await User.create({ ...data, password: hashedPassword });
 
-      await emailService.sendEmail(data.email);
+      await emailService.sendEmail(data.email, EEmailActions.WELCOME, {
+        name: data.name,
+      });
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }

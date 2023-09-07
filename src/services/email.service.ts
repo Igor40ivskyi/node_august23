@@ -2,6 +2,10 @@ import nodemailer from "nodemailer";
 import hbs from "nodemailer-express-handlebars";
 import * as path from "path";
 
+import { configs } from "../configs/config";
+import { allTemplates } from "../constants/email.constants";
+import { EEmailActions } from "../enums/email.enum";
+
 class EmailService {
   private transporter;
   constructor() {
@@ -9,8 +13,8 @@ class EmailService {
       from: "No reply",
       service: "gmail",
       auth: {
-        user: "sorokivskyi777@gmail.com",
-        pass: "ajzadmzqpixkaagk",
+        user: configs.NO_REPLY_EMAIL,
+        pass: configs.NO_REPLY_PASSWORD,
       },
     });
 
@@ -38,11 +42,18 @@ class EmailService {
     this.transporter.use("compile", hbs(hbsOptions));
   }
 
-  public async sendEmail(email: string) {
+  public async sendEmail(
+    email: string,
+    emailAction: EEmailActions,
+    context: Record<string, string | number> = {},
+  ) {
+    const { templateName, subject } = allTemplates[emailAction];
+
     const mailOptiong = {
       to: email,
-      subject: "Hello it is my first email",
-      template: "register",
+      subject,
+      template: templateName,
+      context,
     };
     return await this.transporter.sendMail(mailOptiong);
   }
