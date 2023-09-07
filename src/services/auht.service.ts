@@ -3,6 +3,7 @@ import { Token } from "../models/token.model";
 import { User } from "../models/User.model";
 import { ICredentials, ITokensPair } from "../types/token.type";
 import { IUser } from "../types/user.type";
+import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 
@@ -12,6 +13,8 @@ class AuhtService {
       const hashedPassword = await passwordService.hash(data.password);
 
       await User.create({ ...data, password: hashedPassword });
+
+      await emailService.sendEmail(data.email);
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }
