@@ -49,6 +49,32 @@ class AuhtService {
       throw new ApiError(e.message, e.status);
     }
   }
+  public async refresh(
+    credentials: ICredentials,
+    user: IUser,
+  ): Promise<ITokensPair> {
+    try {
+      const isMatched = await passwordService.compare(
+        credentials.password,
+        user.password,
+      );
+
+      if (!isMatched) {
+        throw new ApiError("Invalid email or password", 401);
+      }
+
+      const tokensPair = await tokenService.generateTokenPair({
+        _id: user._id,
+        name: user.name,
+      });
+
+      await Token.create({ ...tokensPair, _userId: user._id });
+
+      return tokensPair;
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
 }
 
 export const authService = new AuhtService();

@@ -33,6 +33,24 @@ class AuthController {
       next(e);
     }
   }
+  public async refresh(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<ITokensPair>> {
+    try {
+
+      const tokenInfo = req.res.locals
+
+      const tokensPair = await authService.refresh(req.body, req.res.locals.user);
+
+      return res.status(200).json({
+        ...tokensPair,
+      });
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const authController = new AuthController();
