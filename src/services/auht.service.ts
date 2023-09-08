@@ -17,6 +17,7 @@ class AuhtService {
 
       await emailService.sendEmail(data.email, EEmailActions.WELCOME, {
         name: data.name,
+        url: "http://localhost:5541/activate-account/jwtToken",
       });
     } catch (e) {
       throw new ApiError(e.message, e.status);
