@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { ETokenType } from "../enums/token.type.enum";
 import { ApiError } from "../errors/api.error";
 import { Token } from "../models/token.model";
 import { tokenService } from "../services/token.service";
@@ -17,7 +18,7 @@ class AuthMiddleware {
         throw new ApiError("No token", 401);
       }
 
-      const payload = tokenService.checkToken(accessToken);
+      const payload = tokenService.checkToken(accessToken, ETokenType.Access);
 
       const entity = await Token.findOne({ accessToken });
 
@@ -37,20 +38,22 @@ class AuthMiddleware {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const accessToken = req.get("Authorization");
+      const refreshToken = req.get("Authorization");
 
-      if (!accessToken) {
+      if (!refreshToken) {
         throw new ApiError("No token", 401);
       }
 
-      const payload = tokenService.checkToken(accessToken);
+      const payload = tokenService.checkToken(refreshToken, ETokenType.Refresh);
+      console.log(payload, "PAYLOADDDDDDD");
 
-      const entity = await Token.findOne({ accessToken });
+      const entity = await Token.findOne({ refreshToken });
 
       if (!entity) {
         throw new ApiError("Token is not valid", 401);
       }
 
+      req.res.locals.oldTokenPair = entity;
       req.res.locals.tokenPayload = payload;
       next();
     } catch (e) {
