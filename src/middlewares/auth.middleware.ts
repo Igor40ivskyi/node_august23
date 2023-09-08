@@ -45,7 +45,6 @@ class AuthMiddleware {
       }
 
       const payload = tokenService.checkToken(refreshToken, ETokenType.Refresh);
-      console.log(payload, "PAYLOADDDDDDD");
 
       const entity = await Token.findOne({ refreshToken });
 
@@ -54,7 +53,7 @@ class AuthMiddleware {
       }
 
       req.res.locals.oldTokenPair = entity;
-      req.res.locals.tokenPayload = payload;
+      req.res.locals.tokenPayload = { name: payload.name, _id: payload._id };
       next();
     } catch (e) {
       next(e);
