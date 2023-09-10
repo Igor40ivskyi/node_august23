@@ -33,6 +33,17 @@ class AuthController {
       next(e);
     }
   }
-}
 
+  public async refresh(req: Request, res: Response, next: NextFunction) {
+    try {
+      const oldTokenPair = req.res.locals.oldTokenPair;
+      const tokenPayload = req.res.locals.tokenPayload;
+
+      const tokenPair = await authService.refresh(tokenPayload, oldTokenPair);
+      return res.status(200).json(tokenPair);
+    } catch (e) {
+      next(e);
+    }
+  }
+}
 export const authController = new AuthController();
