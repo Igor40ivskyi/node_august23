@@ -34,13 +34,25 @@ class AuthController {
     }
   }
 
-  public async refresh(req: Request, res: Response, next: NextFunction) {
+  public async refresh(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<ITokensPair>> {
     try {
       const oldTokenPair = req.res.locals.oldTokenPair;
       const tokenPayload = req.res.locals.tokenPayload;
 
       const tokenPair = await authService.refresh(tokenPayload, oldTokenPair);
       return res.status(200).json(tokenPair);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async changePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { _id: userId } = req.res.locals.tokenPayload;
     } catch (e) {
       next(e);
     }

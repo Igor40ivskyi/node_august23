@@ -67,6 +67,22 @@ class AuhtService {
       throw new ApiError(e.message, e.status);
     }
   }
+
+  public async changePassword(
+    dto: { newPassword: string; oldPassword: string },
+    userId: string,
+  ) {
+    try {
+      const user = await User.findById(userId);
+
+      const isMatched = await passwordService.compare(
+        dto.oldPassword,
+        user.password,
+      );
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
 }
 
 export const authService = new AuhtService();
