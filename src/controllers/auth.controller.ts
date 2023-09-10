@@ -51,6 +51,16 @@ class AuthController {
       next(e);
     }
   }
+
+  public async changePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { _id: userId } = req.res.locals.tokenPayload;
+
+
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const authController = new AuthController();

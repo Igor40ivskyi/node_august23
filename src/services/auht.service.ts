@@ -66,6 +66,15 @@ class AuhtService {
       throw new ApiError(e.message, e.status);
     }
   }
+
+  public async changePassword(dto: {
+    newPassword: string;
+    oldPassword: string;
+  }) {
+    try {
+
+    } catch (e) {}
+  }
 }
 
 export const authService = new AuhtService();
