@@ -87,9 +87,20 @@ class AuhtService {
 
       const oldPasswords = await OldPassword.find({ _userId: userId });
 
-      oldPasswords.map(async ({ password: hash }) => {
-        passwordService.compare(dto.newPassword, hash);
-      });
+      await Promise.all(
+        oldPasswords.map(async ({ password: hash }) => {
+          const isMatched = await passwordService.compare(
+            dto.newPassword,
+            hash,
+          );
+          if (isMatched) {
+            throw new ApiError(
+              "new password must be different than your old passwords",
+              400,
+            );
+          }
+        }),
+      );
 
       const newHash = await passwordService.hash(dto.newPassword);
 
