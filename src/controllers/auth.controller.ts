@@ -56,7 +56,9 @@ class AuthController {
     try {
       const { _id: userId } = req.res.locals.tokenPayload;
 
+      await authService.changePassword(req.body, userId);
 
+      res.sendStatus(201);
     } catch (e) {
       next(e);
     }

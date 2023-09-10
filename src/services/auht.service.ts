@@ -1,5 +1,6 @@
 import { EEmailActions } from "../enums/email.enum";
 import { ApiError } from "../errors/api.error";
+import { OldPassword } from "../models/oldPassword.model";
 import { Token } from "../models/token.model";
 import { User } from "../models/User.model";
 import { ICredentials, ITokenPayload, ITokensPair } from "../types/token.type";
@@ -67,13 +68,48 @@ class AuhtService {
     }
   }
 
-  public async changePassword(dto: {
-    newPassword: string;
-    oldPassword: string;
-  }) {
+  public async changePassword(
+    dto: { newPassword: string; oldPassword: string },
+    userId: string,
+  ): Promise<void> {
     try {
+      const user = await User.findById(userId).select("+password");
 
-    } catch (e) {}
+      const isMatched = await passwordService.compare(
+        dto.oldPassword,
+        user.password,
+      );
+
+      if (!isMatched) {
+        throw new ApiError("Old password is wrong", 400);
+      }
+
+      const oldPasswords = await OldPassword.find({ _userId: userId });
+
+      await Promise.all(
+        oldPasswords.map(async ({ password: hash }) => {
+          const isMatched = await passwordService.compare(
+            dto.newPassword,
+            hash,
+          );
+          if (isMatched) {
+            throw new ApiError(
+              "new passwod must be different from your old one",
+              400,
+            );
+          }
+        }),
+      );
+
+      const newHash = await passwordService.hash(dto.newPassword);
+
+      await Promise.all([
+        User.updateOne({ _id: userId }, { password: newHash }),
+        OldPassword.create({ password: user.password, _userId: userId }),
+      ]);
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
   }
 }
 
