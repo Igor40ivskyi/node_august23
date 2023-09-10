@@ -53,6 +53,10 @@ class AuthController {
   public async changePassword(req: Request, res: Response, next: NextFunction) {
     try {
       const { _id: userId } = req.res.locals.tokenPayload;
+
+      await authService.changePassword(req.body, userId);
+
+      return res.sendStatus(201);
     } catch (e) {
       next(e);
     }

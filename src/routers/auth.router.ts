@@ -4,7 +4,6 @@ import { authController } from "../controllers";
 import { userMiddleware } from "../middlewares";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { commonMiddleware } from "../middlewares/common.middleware";
-import { User } from "../models/User.model";
 import { ICredentials } from "../types/token.type";
 import { UserValidator } from "../validators";
 
@@ -34,6 +33,7 @@ router.post(
   "/changePassword",
   authMiddleware.checkAccessToken,
   commonMiddleware.isBodyValid(UserValidator.changePassword),
+  authController.changePassword,
 );
 
 export const authRouter = router;
